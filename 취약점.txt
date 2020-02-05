@@ -1,0 +1,64 @@
+1. SQL Injection
+
+취약코드
+	<!-- login -->
+	<select id="login" parameterType="String" resultType="com.example.demo.board.domain.MemberVO">
+		SELECT * FROM USERS WHERE ID= '${id}' AND pwd='${pwd}';	
+	</select>
+
+
+보완 코드
+	<!-- login -->
+	<select id="login" parameterType="String" resultType="com.example.demo.board.domain.MemberVO">
+		SELECT * FROM USERS WHERE ID= #{id} AND pwd=#{pwd};	
+	</select>
+
+→ Spring mybatis에서 #{} 사용
+- 에러 페이지에서 컬럼에 대입되는 값이 '?'로 표시 되게 만들어 줌
+- sql 인젝션 공격이 통하지 않음
+	# : String 형태로 입력값이 자동 변환 (SELECT * FROM USERS WHERE ID=' ' or 1=1 #' AND pwd='1234';)
+		 ' or 1=1 # 를 하나의 string 으로 인식함 ' ' 로 끊어지지 않음
+	$ : String 형태가 아닌 입력값 그대로 전달(SELECT * FROM USERS WHERE ID=' ' or 1=1 #' AND pwd='1234';)
+	
+2. XSS
+ 취약코드
+
+보완코드
+	filter 추가
+
+3. CSRF
+
+4. 에러페이지 처리
+
+취약코드
+	src - main - webapp - WEB-INF - views 에 error.jsp 로 오류 코드 숨기기 위한 페이지 추가하기
+	(src/main/webapp/ 이후, application.properties에서 설정한 spring.mvc.view.prefix 주소 쓸 것)
+
+보완코드
+	src/main/webapp/WEB-INF/views에 error.jsp 추가 후, 
+	오류 정보를 추가하지 않고, 간단한 오류메시지만 출력하고 되돌아갈 수 있게끔 설계
+	------------------------------------------------------------------------------------------------------
+	(src/main/webapp/WEB-INF/views/error.jsp)
+
+	<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+	<!DOCTYPE html>
+	<html>
+	<head>
+	<meta charset="utf-8">
+	<title>Error</title>
+	</head>
+	<body>
+		<form action="<%=request.getContextPath()%>/">
+			<button type="submit" class="btn btn-primary">돌아가기</button>
+		</form>
+	</body>
+	</html>
+	-----------------------------------------------------------------------------------------------------
+
+5. 암호화 전송
+
+6. 웹쉘 업로드 취약점
+
+7. 
+
+
